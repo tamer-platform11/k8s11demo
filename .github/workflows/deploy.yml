@@ -54,21 +54,16 @@ jobs:
             VCS_REF=${{ github.sha }}
 
   deploy:
-    name: Deploy Minikube VM
-    runs-on: ubuntu-latest
+    name: Deploy Minikube
+    runs-on: self-hosted
     needs: build-and-push
 
     steps:
-      - name: Connect VM and update deployment image
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          script: |
-            kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
-              ${{ env.CONTAINER_NAME }}=${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.image_tag }} \
-              -n ${{ env.K8S_NAMESPACE }}
+      - name: Deploy image to Kubernetes
+        run: |
+          kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
+            ${{ env.CONTAINER_NAME }}=${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.image_tag }} \
+            -n ${{ env.K8S_NAMESPACE }}
 
-            kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.K8S_NAMESPACE }}
-            kubectl get pods -n ${{ env.K8S_NAMESPACE }}
+          kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.K8S_NAMESPACE }}
+          kubectl get pods -n ${{ env.K8S_NAMESPACE }}
