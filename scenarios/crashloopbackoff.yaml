@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkding
+  namespace: inveon-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linkding
+  template:
+    metadata:
+      labels:
+        app: linkding
+    spec:
+      containers:
+        - name: linkding
+          image: sissbruecker/linkding:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "exit 1"]
+          ports:
+            - containerPort: 9090
+          env:
+            - name: LD_SUPERUSER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: linkding-secret
+                  key: LD_SUPERUSER_NAME
+            - name: LD_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: linkding-secret
+                  key: LD_SUPERUSER_PASSWORD
+            - name: LD_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: linkding-secret
+                  key: LD_SECRET_KEY
+            - name: LD_DISABLE_BACKGROUND_TASKS
+              valueFrom:
+                configMapKeyRef:
+                  name: linkding-config
+                  key: LD_DISABLE_BACKGROUND_TASKS
+            - name: LD_DISABLE_URL_VALIDATION
+              valueFrom:
+                configMapKeyRef:
+                  name: linkding-config
+                  key: LD_DISABLE_URL_VALIDATION

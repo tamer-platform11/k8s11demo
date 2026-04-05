@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: linkding-config
+  namespace: inveon-demo
+data:
+  LD_DISABLE_BACKGROUND_TASKS: "false"
+  LD_DISABLE_URL_VALIDATION: "true"
