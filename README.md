@@ -13,7 +13,7 @@ Prod ortamda scaling HorizontalPodAutoscaler ile otomatik yapılmalıydı. podla
  Security açısından eksikler neler? 
 
 
-TLS , Prod domain ve sertifika, NetworkPolicy,Private repo, external secret
+TLS , Prod domain ve sertifika, NetworkPolicy,Private repo, External secret,Firewall
 
 Resource yönetimi nasıl iyileştirilir?
 
